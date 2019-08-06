@@ -1,4 +1,4 @@
-FROM mono:5
+FROM mono:6
 
 LABEL "com.github.actions.name" = "docfx"
 LABEL "com.github.actions.description" = "Build docs using DocFX"

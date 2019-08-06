@@ -10,8 +10,8 @@ LABEL "repository" = "http://github.com/dahlia/actions"
 LABEL "homepage" = "http://github.com/dahlia/actions"
 LABEL "maintainer" = "Hong Minhee <hong.minhee@gmail.com>"
 
-COPY entrypoint.sh /entrypoint.sh
-
 RUN apk add --no-cache jq
+
+COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
