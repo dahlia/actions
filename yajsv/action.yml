@@ -1,0 +1,15 @@
+name: yajsv
+description: Validate if JSON/YAML files comply schema
+inputs:
+  schema:
+    description: Primary schema to validate against
+    required: true
+  documents:
+    description: JSON/YAML documents to validate
+outputs: {}
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - ${{ inputs.schema }}
+  - ${{ inputs.documents }}
