@@ -1,0 +1,17 @@
+name: Setup yq
+description: Setup yq by downloading, installing, and adding it to the path.
+author: Hong Minhee
+branding:
+  icon: terminal
+  color: gray-dark
+inputs:
+  version:
+    description: The exact version of the yq to install.
+outputs:
+  version:
+    description: The exact version of the installed yq.
+  install-dir:
+    description: The installed directory path.
+runs:
+  using: node12
+  main: main.js

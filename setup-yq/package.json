@@ -1,0 +1,12 @@
+{
+  "name": "setup-yq",
+  "description": "Set up the yq command easily in GitHub Actions",
+  "author": "Hong Minhee",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/io": "^1.1.1",
+    "@actions/tool-cache": "^1.7.1",
+    "node-fetch": "^2.6.5"
+  }
+}

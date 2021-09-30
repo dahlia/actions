@@ -1,0 +1,71 @@
+name: Test setup-yq
+on:
+  push: []
+  pull_request: []
+
+jobs:
+  latest-version:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./setup-yq
+      id: test1
+    - shell: bash
+      if: "!startsWith(matrix.os, 'windows')"
+      run: 'ls -al "${{ steps.test1.outputs.install-dir }}"'
+    - shell: pwsh
+      if: "startsWith(matrix.os, 'windows')"
+      run: 'gci "${{ steps.test1.outputs.install-dir }}"'
+    - shell: bash
+      run: |
+        set -e
+        [[ "${{ steps.test1.conclusion }}" = "success" ]]
+        output_version="${{ steps.test1.outputs.version }}"
+        installed_version="$(yq --version | awk '{ print $NF }')"
+        [[ "$output_version" = "$installed_version" ]]
+  specify-version:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./setup-yq
+      id: test2
+      with:
+        version: "4.13.0"
+    - shell: bash
+      if: "!startsWith(matrix.os, 'windows')"
+      run: 'ls -al "${{ steps.test2.outputs.install-dir }}"'
+    - shell: pwsh
+      if: "startsWith(matrix.os, 'windows')"
+      run: 'gci "${{ steps.test2.outputs.install-dir }}"'
+    - shell: bash
+      run: |
+        set -e
+        [[ "${{ steps.test2.conclusion }}" = "success" ]]
+        output_version="${{ steps.test2.outputs.version }}"
+        installed_version="$(yq --version | awk '{ print $NF }')"
+        [[ "$output_version" = "$installed_version" ]]
+        [[ "$installed_version" = "4.13.0" ]]
+  wrong-version:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ./setup-yq
+      id: test3
+      with:
+        version: "0.0.999999"  # Expected to be absent
+      continue-on-error: true
+    - shell: bash
+      if: always()
+      run: '[[ "${{ steps.test3.outcome }}" = "failure" ]]'
