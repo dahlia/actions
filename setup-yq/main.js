@@ -49,12 +49,14 @@ async function install() {
   }
 
   for (const file of await listDir(cachedPath)) {
-    if (!file.startsWith("yq") ||
+    if (!file.startsWith("yq_") ||
         platform == "windows" && !file.endsWith(".exe")) continue;
-    await io.mv(
-      path.join(cachedPath, file),
-      path.join(cachedPath, `yq${platform == "windows" ? ".exe" : ""}`)
-    );
+    const destination =
+      path.join(cachedPath, `yq${platform == "windows" ? ".exe" : ""}`);
+    await io.mv(path.join(cachedPath, file), destination);
+    if (platform != "windows") {
+      await fs.promises.chmod(cachedPath, 0o755);
+    }
     break;
   }
 
